@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+       <!-- <link rel="stylesheet" href="css/style.css">-->
+       <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" 
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" 
+    crossorigin="anonymous">
+    </head>
+
+  <body>
+    <header>
+      <div class="card-header">
+        <ul class="nav nav-tabs card-header-tabs">
+          <h2 class="my-0 mr-md-auto font-weight-normal">Домашняя</h2>
+          
+          <li class="nav-item">
+            <form action="index.php" method="POST">
+              <button class="btn btn-outline-primary">Home</button>
+            </form>
+          </li>
+
+          <li class="nav-item">
+            <form action="CompanyRegistration.php" method="POST">
+              <button class="btn btn-outline-primary">Registration Company</button>
+            </form>
+          </li>
+
+          <li class="nav-item">
+            <form action="UserRegistration.php" method="POST">
+              <button class="btn btn-outline-primary">User Registration</button>
+            </form>
+          </li>
+
+          <li  class="nav-item"> 
+            <form action="Signin.php" mathod="POST">
+              <button type="submit" class="btn btn-primary">Sign in</button>
+            </form>
+          </li>
+      </ul>
+     </div>
+    </header>
+
+<?php
+        $host = 'localhost'; 
+        $database = 'zcompany';
+        $user = 'root'; 
+        $password = 'root'; 
+
+        $link = mysqli_connect($host, $user, $password, $database) 
+        or die("Ошибка " . mysqli_error($link));     
+
+        $query ="select a.nameOwners, a.inn, a.passport, a.phone, a.email, 
+            b.nameCompany, b.id, b.City, b.STreet, b.numberHome 
+              from owners as a inner join companies as b on a.inn = b.innOwners;";
+
+        $result = mysqli_query($link, $query) or die("Ошибка " . mysqli_error($link)); 
+        if($result)
+        {
+            $rows = mysqli_num_rows($result);
+             
+            echo 
+              '<div class="card-body">
+              <table class="table table-sm table-striped table-bordered">   
+                  <tr> 
+              <th>ФИО</th> 
+              <th>ИНН</th>
+              <th>Паспорт</th>
+              <th>Телефон</th>
+              <th>Почта</th>
+              <th>Название компании</th>
+              <th>Код компании</th>
+              <th>Город</th>
+              <th>Улица</th>
+              <th>Номер дома</th>
+                  </tr>';
+              for ($i = 0 ; $i < $rows ; ++$i)
+              {
+                  $row = mysqli_fetch_row($result);
+                  echo "<tr>";
+                      for ($j = 0 ; $j < 10 ; ++$j) echo "<td>$row[$j]</td>";
+                  echo "</tr>";
+              }
+              echo "  
+              </div>
+              </table>";
+
+              mysqli_free_result($result);
+    }
+    mysqli_close($link);
+    ?>
+  </body>
+</html>
